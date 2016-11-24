@@ -1,5 +1,5 @@
 {
-  "name": "linkedin-pdf-parser-node",
+  "name": "linkedin-pdf-parser",
   "version": "0.1.0",
   "description": "A parser to parse a LinkedIn resume pdf to a json structure",
   "keywords": [
