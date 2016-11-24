@@ -81,8 +81,12 @@ const parsePages = pages => {
 
   // Combine groups below last hline on a page and above first hline on next page
   for (let i = 1; i < groups.length; i++) {
-    if (!groups[i - 1]['-1'] || !groups[i]['0']) continue
-    groups[i]['0'] = R.concat(groups[i - 1]['-1'], groups[i]['0'])
+    if (!groups[i - 1]['-1'] || !(groups[i]['0'] || groups[i]['-1'])) continue
+    if (groups[i]['0']) {
+      groups[i]['0'] = R.concat(groups[i - 1]['-1'], groups[i]['0'])
+    } else {
+      groups[i]['-1'] = R.concat(groups[i - 1]['-1'], groups[i]['-1'])
+    }
     delete groups[i - 1]['-1']
   }
 
