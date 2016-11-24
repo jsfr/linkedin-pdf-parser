@@ -20,7 +20,7 @@
     "url": "git://github.com/jsfr/linkedin-pdf-parser-node.git"
   },
   "scripts": {
-    "lint": "standard index.js",
+    "lint": "standard src/**/*.js",
     "build": "babel src -d lib"
   },
   "main": "lib/index.js",
