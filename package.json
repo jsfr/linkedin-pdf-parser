@@ -46,7 +46,7 @@
   ],
   "readme": "https://github.com/jsfr/linkedin-pdf-parser-node/blob/master/readme.md",
   "dependencies": {
-    "moment-timezone": "^0.5.9",
+    "moment-timezone": "^0.5.10",
     "pdf2json": "^1.1.7",
     "ramda": "^0.22.1"
   },
