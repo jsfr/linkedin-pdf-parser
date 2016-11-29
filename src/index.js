@@ -17,9 +17,9 @@ const getTexts = R.compose(
 )
 
 const getRawTexts = R.compose(
-  R.map(R.trim),
-  R.map(decodeURIComponent),
-  R.map(R.prop('T')),
+  R.map(R.evolve({
+    T: R.compose(R.trim, decodeURIComponent)
+  })),
   R.flatten,
   R.map(R.prop('R'))
 )
@@ -32,11 +32,28 @@ const parseDate = str => {
   return date
 }
 
+// assumes that position lines have already been joined into single lines (i.e.
+// that they do no span multiple lines)
 const isPosition = str => str.indexOf(JOB_SEPERATOR) !== -1
 
-const getPositions = texts => {
-  let positions = []
+// See https://github.com/modesty/pdf2json#text-style-data-without-style-dictionary
+const isBold = text => text.TS[2] === 1
 
+const getPositions = rawTexts => {
+
+  // join lines that are in bold as job only "title at company" lines are bold
+  let texts = [ rawTexts[0].T ]
+  for (let i = 1; i < rawTexts.length; i++) {
+    const lastText = rawTexts[i - 1]
+    const currText = rawTexts[i]
+    if (isBold(lastText) && isBold(currText)) {
+      texts[texts.length - 1] = `${texts[texts.length - 1]} ${currText.T}`
+    } else (
+      texts.push(currText.T)
+    )
+  }
+
+  let positions = []
   for (let i = 0; i < texts.length; i++) {
     const text = texts[i]
     if (isPosition(text)) {
@@ -102,9 +119,9 @@ const parsePages = pages => {
   const sections = {}
   for (let i = 0; i < groups.length; i++) {
     const [ head, ...tail ] = groups[i]
-    switch (head) {
+    switch (head.T) {
       case 'Summary':
-        sections.summary = tail.join('\n')
+        sections.summary = R.map(R.prop('T'), tail).join('\n')
         break
       case 'Experience':
         sections.positions = getPositions(tail)
