@@ -131,9 +131,6 @@ const parsePages = pages => {
     }
   }
 
-  // Last check before handing over
-  if (!sections.positions) throw new Error('No positions have been found')
-
   return sections
 }
 
